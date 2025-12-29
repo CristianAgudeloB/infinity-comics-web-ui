@@ -284,11 +284,11 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
                         to={`/comic/${comic._id}`} 
                         className="flex gap-3 sm:gap-4 p-3 rounded-lg bg-zinc-900/50 hover:bg-zinc-800/50 border border-zinc-800/30 hover:border-[#FF522D]/30 transition-all duration-200 group"
                       >
-                        <div className="relative flex-shrink-0 w-16 h-24 sm:w-20 sm:h-28 rounded overflow-hidden bg-zinc-800">
+                        <div className="relative flex-shrink-0 aspect-[17/26] w-16 sm:w-20 rounded overflow-hidden bg-zinc-800">
                           <img 
                             src={comic.coverUrl} 
                             alt={comic.title} 
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+                            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" 
                           />
                           <div className="absolute top-1 left-1 bg-[#FF522D] text-white text-xs font-bold px-1.5 py-0.5 rounded">
                             NUEVO
