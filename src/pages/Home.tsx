@@ -156,17 +156,57 @@ export default function Home() {
     return map[publisher] || `/editorial/${encodeURIComponent(publisher)}`;
   };
 
-const renderPublisherSection = (publisher: string, publisherSeries: Series[], isCompact: boolean = false) => {
+// Renderizar sección de editorial con grid (para Marvel y DC)
+const renderPublisherGridSection = (publisher: string, publisherSeries: Series[]) => {
+  // Limitar a 6 elementos para el grid
+  const limitedSeries = publisherSeries.slice(0, 6);
+  
+  return (
+    <section key={publisher} className="w-full mb-8 pt-2">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-zinc-100">{publisher}</h2>
+          <p className="text-sm text-zinc-400">Explora la colección de {publisher}</p>
+        </div>
+        <Link 
+          to={getPublisherSlug(publisher)} 
+          className="flex items-center gap-2 text-sm text-[#FF522D] hover:text-[#ff6b4d] transition-colors font-medium group"
+        >
+          Ver todo
+          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
+      </div>
+
+      {/* Grid de series - responsive y controlado, ajustado para sidebar */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+        {limitedSeries.map((s) => (
+          <SeriesCard 
+            key={s._id} 
+            id={s._id} 
+            title={s.name} 
+            image={s.coverUrl} 
+            publisher={s.publisher} 
+            optimizeImage={true} 
+            hasOnlineRead={s.hasOnlineRead} 
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+// Renderizar sección de editorial con slider (para Image, Indie, Manga)
+const renderPublisherSection = (publisher: string, publisherSeries: Series[]) => {
   // Limitar a 12 elementos máximo para el slider
   const limitedSeries = publisherSeries.slice(0, 12);
   
   return (
-    <section key={publisher} className={`w-full ${isCompact ? 'mb-8 pt-2' : 'mb-12'}`}>
+    <section key={publisher} className="w-full mb-12">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className={`${isCompact ? 'text-2xl' : 'text-3xl'} font-bold text-zinc-100`}>
-            {publisher}
-          </h2>
+          <h2 className="text-3xl font-bold text-zinc-100">{publisher}</h2>
           <p className="text-sm text-zinc-400">Explora la colección de {publisher}</p>
         </div>
         <Link 
@@ -195,11 +235,11 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[], is
   return (
     <div className="space-y-8 md:space-y-12">
       {/* Sección principal con contenido destacado */}
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 lg:items-stretch">
         {/* Contenido principal - Ocupa todo el ancho en móvil, 2/3 en desktop */}
-        <div className="flex-1 space-y-8 md:space-y-12">
+        <div className="flex-1 w-full min-w-0 flex flex-col">
           {/* Sección de Novedades con Marvel y DC integrados */}
-          <div className="space-y-8 md:space-y-10">
+          <div className="space-y-8 md:space-y-10 flex-1">
             {/* Novedades */}
             {recentComics.length > 0 && (
               <section className="bg-gradient-to-br from-zinc-900/40 via-zinc-900/30 to-zinc-900/40 border border-zinc-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl hover:shadow-[#FF522D]/5 transition-all duration-300">
@@ -258,21 +298,21 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[], is
               </section>
             )}
 
-            {/* Secciones de Marvel y DC - Directamente bajo Novedades */}
+            {/* Secciones de Marvel y DC - Directamente bajo Novedades con Grid */}
             {seriesByPublisher['Marvel'] && seriesByPublisher['Marvel'].length > 0 && (
-              renderPublisherSection('Marvel', seriesByPublisher['Marvel'], true)
+              renderPublisherGridSection('Marvel', seriesByPublisher['Marvel'])
             )}
             
             {seriesByPublisher['DC'] && seriesByPublisher['DC'].length > 0 && (
-              renderPublisherSection('DC', seriesByPublisher['DC'], true)
+              renderPublisherGridSection('DC', seriesByPublisher['DC'])
             )}
           </div>
         </div>
 
-        {/* Sidebar de destacados - Se oculta en móvil, aparece en desktop */}
+        {/* Sidebar de destacados - Se oculta en móvil, aparece en desktop, alineado con el contenido */}
         {topSeries.length > 0 && (
-          <aside className="lg:w-80 lg:flex-shrink-0">
-            <div className="sticky top-24 bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-6">
+          <aside className="lg:w-80 lg:flex-shrink-0 w-full flex flex-col">
+            <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-6 flex-1 flex flex-col">
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-zinc-800/50 border border-zinc-700/50 rounded-lg">
                   <FireIcon className="w-5 h-5 text-white" />
@@ -280,7 +320,7 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[], is
                 <h3 className="text-xl font-bold text-zinc-100">Destacados</h3>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-3 flex-1">
                 {topSeries.slice(0, 10).map((seriesItem, index) => (
                   <Link 
                     key={seriesItem._id} 
