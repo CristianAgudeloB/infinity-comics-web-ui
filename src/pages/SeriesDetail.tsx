@@ -16,8 +16,14 @@ export default function SeriesDetail() {
     if (!id) return;
     setLoading(true);
     Promise.all([
-      getSeriesById(id).then(setSeries).catch(console.error),
-      getComicsBySeries(id).then(setComics).catch(console.error)
+      getSeriesById(id).then(setSeries).catch((err) => {
+        console.error("Error loading series:", err);
+        setSeries(null);
+      }),
+      getComicsBySeries(id).then(setComics).catch((err) => {
+        console.error("Error loading comics:", err);
+        setComics([]);
+      })
     ]).finally(() => setLoading(false));
   }, [id]);
 
