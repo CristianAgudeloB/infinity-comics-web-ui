@@ -44,3 +44,39 @@ scrollbar-width: none;
 .scrollbar-hide::-webkit-scrollbar {
 display: none;
 }
+
+/* Estilos para el scrollbar hide */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Asegurar que las imágenes no se desborden */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mejorar el rendimiento de scroll */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevenir desbordamientos horizontales */
+body, html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Snap scrolling para móvil */
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}

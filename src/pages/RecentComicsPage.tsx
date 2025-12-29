@@ -41,7 +41,7 @@ export default function RecentComicsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-2">🆕 Novedades</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-2">Novedades</h1>
         <p className="text-zinc-400">
           Últimos {comics.length} cómics añadidos
         </p>

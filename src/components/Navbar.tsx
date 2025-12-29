@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { HomeIcon, SparklesIcon, UsersIcon } from "./Icons";
 
 export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,13 +24,16 @@ export default function Navbar() {
 
         {/* Menú */}
         <nav className="hidden md:flex gap-6 text-sm text-zinc-300">
-          <Link to="/" className="hover:text-[#FF522D] transition-colors">
+          <Link to="/" className="flex items-center gap-2 hover:text-[#FF522D] transition-colors group">
+            <HomeIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
             Inicio
           </Link>
-          <Link to="/novedades" className="hover:text-[#FF522D] transition-colors">
+          <Link to="/novedades" className="flex items-center gap-2 hover:text-[#FF522D] transition-colors group">
+            <SparklesIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
             Novedades
           </Link>
-          <Link to="/el-corps" className="hover:text-[#FF522D] transition-colors">
+          <Link to="/el-corps" className="flex items-center gap-2 hover:text-[#FF522D] transition-colors group">
+            <UsersIcon className="w-4 h-4 group-hover:scale-110 transition-transform" />
             El Corps
           </Link>
         </nav>
