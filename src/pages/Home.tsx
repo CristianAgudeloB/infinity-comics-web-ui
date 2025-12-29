@@ -158,8 +158,8 @@ export default function Home() {
 
 // Renderizar sección de editorial con grid (para Marvel y DC)
 const renderPublisherGridSection = (publisher: string, publisherSeries: Series[]) => {
-  // Limitar a 6 elementos para el grid
-  const limitedSeries = publisherSeries.slice(0, 6);
+  // Limitar a 5 elementos para mostrar en una sola fila
+  const limitedSeries = publisherSeries.slice(0, 5);
   
   return (
     <section key={publisher} className="w-full mb-8 pt-2">
@@ -179,8 +179,8 @@ const renderPublisherGridSection = (publisher: string, publisherSeries: Series[]
         </Link>
       </div>
 
-      {/* Grid de series - responsive y controlado, ajustado para sidebar */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+      {/* Grid de series - 5 columnas, tamaño similar a los sliders */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {limitedSeries.map((s) => (
           <SeriesCard 
             key={s._id} 
