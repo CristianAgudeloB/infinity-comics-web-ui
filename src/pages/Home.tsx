@@ -156,15 +156,17 @@ export default function Home() {
     return map[publisher] || `/editorial/${encodeURIComponent(publisher)}`;
   };
 
-const renderPublisherSection = (publisher: string, publisherSeries: Series[]) => {
+const renderPublisherSection = (publisher: string, publisherSeries: Series[], isCompact: boolean = false) => {
   // Limitar a 12 elementos máximo para el slider
   const limitedSeries = publisherSeries.slice(0, 12);
   
   return (
-    <section key={publisher} className="w-full mb-12">
+    <section key={publisher} className={`w-full ${isCompact ? 'mb-8 pt-2' : 'mb-12'}`}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-zinc-100">{publisher}</h2>
+          <h2 className={`${isCompact ? 'text-2xl' : 'text-3xl'} font-bold text-zinc-100`}>
+            {publisher}
+          </h2>
           <p className="text-sm text-zinc-400">Explora la colección de {publisher}</p>
         </div>
         <Link 
@@ -178,8 +180,8 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
         </Link>
       </div>
 
-      {/* Contenedor con ancho limitado */}
-      <div className="w-full max-w-full overflow-hidden">
+      {/* Contenedor del slider - asegurar ancho completo y scroll correcto */}
+      <div className="w-full min-w-0">
         <SeriesSlider 
           series={limitedSeries} 
           viewMoreLink={getPublisherSlug(publisher)}
@@ -193,20 +195,23 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
   return (
     <div className="space-y-8 md:space-y-12">
       {/* Sección principal con contenido destacado */}
-      {topSeries.length > 0 && (
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Contenido principal - Ocupa todo el ancho en móvil, 2/3 en desktop */}
-          <div className="flex-1 space-y-8 md:space-y-12">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Contenido principal - Ocupa todo el ancho en móvil, 2/3 en desktop */}
+        <div className="flex-1 space-y-8 md:space-y-12">
+          {/* Sección de Novedades con Marvel y DC integrados */}
+          <div className="space-y-8 md:space-y-10">
             {/* Novedades */}
             {recentComics.length > 0 && (
-              <section className="bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-6">
+              <section className="bg-gradient-to-br from-zinc-900/40 via-zinc-900/30 to-zinc-900/40 border border-zinc-800/50 rounded-xl p-6 shadow-lg hover:shadow-xl hover:shadow-[#FF522D]/5 transition-all duration-300">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-zinc-800/50 border border-zinc-700/50 rounded-lg">
+                    <div className="p-2 bg-gradient-to-br from-zinc-800/60 to-zinc-800/40 border border-zinc-700/50 rounded-lg shadow-sm">
                       <BoltIcon className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-2xl md:text-3xl font-bold text-zinc-100">Novedades</h2>
+                      <h2 className="text-2xl md:text-3xl font-bold text-zinc-100 bg-gradient-to-r from-zinc-100 to-zinc-300 bg-clip-text text-transparent">
+                        Novedades
+                      </h2>
                       <p className="text-sm text-zinc-400">Recién llegados a la colección</p>
                     </div>
                   </div>
@@ -253,19 +258,19 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
               </section>
             )}
 
-            {/* Secciones de Marvel y DC - APILADAS VERTICALMENTE */}
-            <div className="space-y-8 md:space-y-12">
-              {seriesByPublisher['Marvel'] && seriesByPublisher['Marvel'].length > 0 && (
-                renderPublisherSection('Marvel', seriesByPublisher['Marvel'])
-              )}
-              
-              {seriesByPublisher['DC'] && seriesByPublisher['DC'].length > 0 && (
-                renderPublisherSection('DC', seriesByPublisher['DC'])
-              )}
-            </div>
+            {/* Secciones de Marvel y DC - Directamente bajo Novedades */}
+            {seriesByPublisher['Marvel'] && seriesByPublisher['Marvel'].length > 0 && (
+              renderPublisherSection('Marvel', seriesByPublisher['Marvel'], true)
+            )}
+            
+            {seriesByPublisher['DC'] && seriesByPublisher['DC'].length > 0 && (
+              renderPublisherSection('DC', seriesByPublisher['DC'], true)
+            )}
           </div>
+        </div>
 
-          {/* Sidebar de destacados - Se oculta en móvil, aparece en desktop */}
+        {/* Sidebar de destacados - Se oculta en móvil, aparece en desktop */}
+        {topSeries.length > 0 && (
           <aside className="lg:w-80 lg:flex-shrink-0">
             <div className="sticky top-24 bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-6">
               <div className="flex items-center gap-3 mb-4">
@@ -303,8 +308,8 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
               </div>
             </div>
           </aside>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Otras editoriales (Image, Indie, Manga) */}
       {Object.entries(seriesByPublisher)
