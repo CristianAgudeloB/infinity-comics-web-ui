@@ -61,6 +61,13 @@ export default function Home() {
     loadData();
   }, [searchQuery]);
 
+  // Mapa de series por ID para buscar editoriales rápidamente
+  const seriesMap = useMemo(() => {
+    const map = new Map<string, Series>();
+    series.forEach(s => map.set(s._id, s));
+    return map;
+  }, [series]);
+
   const seriesByPublisher = useMemo(() => {
     const allowedPublishers = ['Marvel', 'DC', 'Image', 'Indie', 'Manga'];
     const grouped = series.reduce((acc, s) => {
@@ -162,25 +169,25 @@ const renderPublisherGridSection = (publisher: string, publisherSeries: Series[]
   const limitedSeries = publisherSeries.slice(0, 5);
   
   return (
-    <section key={publisher} className="w-full mb-8 pt-2">
-      <div className="flex items-center justify-between mb-6">
+    <section key={publisher} className="w-full mb-6 sm:mb-8 pt-2">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-zinc-100">{publisher}</h2>
-          <p className="text-sm text-zinc-400">Explora la colección de {publisher}</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-zinc-100">{publisher}</h2>
+          <p className="text-xs sm:text-sm text-zinc-400">Explora la colección de {publisher}</p>
         </div>
         <Link 
           to={getPublisherSlug(publisher)} 
-          className="flex items-center gap-2 text-sm text-[#FF522D] hover:text-[#ff6b4d] transition-colors font-medium group"
+          className="flex items-center gap-2 text-xs sm:text-sm text-[#FF522D] hover:text-[#ff6b4d] transition-colors font-medium group self-start sm:self-auto"
         >
           Ver todo
-          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </Link>
       </div>
 
       {/* Grid de series - 5 columnas, tamaño similar a los sliders */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
         {limitedSeries.map((s) => (
           <SeriesCard 
             key={s._id} 
@@ -203,18 +210,18 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
   const limitedSeries = publisherSeries.slice(0, 12);
   
   return (
-    <section key={publisher} className="w-full mb-12">
-      <div className="flex items-center justify-between mb-6">
+    <section key={publisher} className="w-full mb-8 sm:mb-12">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-zinc-100">{publisher}</h2>
-          <p className="text-sm text-zinc-400">Explora la colección de {publisher}</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100">{publisher}</h2>
+          <p className="text-xs sm:text-sm text-zinc-400">Explora la colección de {publisher}</p>
         </div>
         <Link 
           to={getPublisherSlug(publisher)} 
-          className="flex items-center gap-2 text-sm text-[#FF522D] hover:text-[#ff6b4d] transition-colors font-medium group"
+          className="flex items-center gap-2 text-xs sm:text-sm text-[#FF522D] hover:text-[#ff6b4d] transition-colors font-medium group self-start sm:self-auto"
         >
           Ver todo
-          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </Link>
@@ -266,34 +273,40 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
                   </Link>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {recentComics.slice(0, 6).map((comic) => (
-                    <Link 
-                      key={comic._id} 
-                      to={`/comic/${comic._id}`} 
-                      className="flex gap-4 p-3 rounded-lg bg-zinc-900/50 hover:bg-zinc-800/50 border border-zinc-800/30 hover:border-[#FF522D]/30 transition-all duration-200 group"
-                    >
-                      <div className="relative flex-shrink-0 w-16 h-24 rounded overflow-hidden bg-zinc-800">
-                        <img 
-                          src={comic.coverUrl} 
-                          alt={comic.title} 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
-                        />
-                        <div className="absolute top-1 left-1 bg-[#FF522D] text-white text-xs font-bold px-1.5 py-0.5 rounded">
-                          NUEVO
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                  {recentComics.slice(0, 6).map((comic) => {
+                    const comicSeries = comic.seriesId ? seriesMap.get(comic.seriesId) : null;
+                    const publisher = comicSeries?.publisher || '';
+                    
+                    return (
+                      <Link 
+                        key={comic._id} 
+                        to={`/comic/${comic._id}`} 
+                        className="flex gap-3 sm:gap-4 p-3 rounded-lg bg-zinc-900/50 hover:bg-zinc-800/50 border border-zinc-800/30 hover:border-[#FF522D]/30 transition-all duration-200 group"
+                      >
+                        <div className="relative flex-shrink-0 w-16 h-24 sm:w-20 sm:h-28 rounded overflow-hidden bg-zinc-800">
+                          <img 
+                            src={comic.coverUrl} 
+                            alt={comic.title} 
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+                          />
+                          <div className="absolute top-1 left-1 bg-[#FF522D] text-white text-xs font-bold px-1.5 py-0.5 rounded">
+                            NUEVO
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm text-zinc-100 line-clamp-2 mb-1 group-hover:text-[#FF522D] transition-colors">
-                          {comic.title}
-                        </h3>
-                        <div className="flex items-center gap-1 text-xs text-zinc-500 mt-2">
-                          <ClockIcon className="w-3 h-3" />
-                          <span>Reciente</span>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-sm text-zinc-100 line-clamp-2 mb-1 group-hover:text-[#FF522D] transition-colors">
+                            {comic.title}
+                          </h3>
+                          {publisher && (
+                            <p className="text-xs text-zinc-400 mt-1 line-clamp-1">
+                              {publisher}
+                            </p>
+                          )}
                         </div>
-                      </div>
-                    </Link>
-                  ))}
+                      </Link>
+                    );
+                  })}
                 </div>
               </section>
             )}
@@ -312,22 +325,22 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
         {/* Sidebar de destacados - Se oculta en móvil, aparece en desktop, alineado con el contenido */}
         {topSeries.length > 0 && (
           <aside className="lg:w-80 lg:flex-shrink-0 w-full flex flex-col">
-            <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-6 flex-1 flex flex-col">
-              <div className="flex items-center gap-3 mb-4">
+            <div className="bg-zinc-900/30 border border-zinc-800/50 rounded-xl p-4 sm:p-6 flex-1 flex flex-col">
+              <div className="flex items-center gap-2 sm:gap-3 mb-4">
                 <div className="p-2 bg-zinc-800/50 border border-zinc-700/50 rounded-lg">
-                  <FireIcon className="w-5 h-5 text-white" />
+                  <FireIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-zinc-100">Destacados</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-100">Destacados</h3>
               </div>
 
-              <div className="space-y-3 flex-1">
+              <div className="space-y-2 sm:space-y-3 flex-1">
                 {topSeries.slice(0, 10).map((seriesItem, index) => (
                   <Link 
                     key={seriesItem._id} 
                     to={`/series/${seriesItem._id}`} 
-                    className="flex gap-3 group"
+                    className="flex gap-2 sm:gap-3 group"
                   >
-                    <div className="relative flex-shrink-0 w-16 h-24 rounded overflow-hidden bg-zinc-800">
+                    <div className="relative flex-shrink-0 w-14 h-20 sm:w-16 sm:h-24 rounded overflow-hidden bg-zinc-800">
                       <img 
                         src={seriesItem.coverUrl} 
                         alt={seriesItem.name} 
@@ -335,10 +348,10 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-sm text-zinc-100 line-clamp-2 mb-1 group-hover:text-[#FF522D] transition-colors">
+                      <h4 className="font-semibold text-xs sm:text-sm text-zinc-100 line-clamp-2 mb-1 group-hover:text-[#FF522D] transition-colors">
                         {seriesItem.name}
                       </h4>
-                      <p className="text-xs text-zinc-400 mb-1">{seriesItem.publisher}</p>
+                      <p className="text-xs text-zinc-400 mb-1 line-clamp-1">{seriesItem.publisher}</p>
                       <div className="flex items-center gap-1">
                         <span className="text-xs text-[#FF522D] font-semibold">#{index + 1}</span>
                       </div>

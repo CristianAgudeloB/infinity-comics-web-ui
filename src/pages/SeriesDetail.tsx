@@ -10,7 +10,6 @@ export default function SeriesDetail() {
   const [series, setSeries] = useState<Series | null>(null);
   const [comics, setComics] = useState<Comic[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hasOnlineRead, setHasOnlineRead] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -54,11 +53,6 @@ export default function SeriesDetail() {
     });
   }, [comics]);
 
-  useEffect(() => {
-    // Verificar si hay al menos un cómic con lectura online
-    const hasOnline = sortedComics.some(comic => comic.onlineRead && comic.pages && comic.pages.length > 0);
-    setHasOnlineRead(hasOnline);
-  }, [sortedComics]);
 
   useEffect(() => {
     if (series) {
@@ -121,23 +115,6 @@ export default function SeriesDetail() {
               <span className="text-sm font-semibold text-zinc-300">{comics.length}</span>
             </div>
           </div>
-          {hasOnlineRead && (() => {
-            const firstOnlineComic = comics.find(c => c.onlineRead && c.pages && c.pages.length > 0);
-            return firstOnlineComic ? (
-              <div className="mb-6">
-                <Link
-                  to={`/comic/${firstOnlineComic._id}/read`}
-                  className="inline-flex items-center gap-2 bg-[#FF522D] hover:bg-[#ff3d1a] text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Leer Online
-                </Link>
-              </div>
-            ) : null;
-          })()}
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-sm text-[#FF522D] hover:text-[#ff6b4d] transition-colors"

@@ -35,8 +35,9 @@ export const UsersIcon = ({ className = "w-5 h-5" }: IconProps) => (
 
 export const FireIcon = ({ className = "w-5 h-5" }: IconProps) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2C12 2 7 6 7 12C7 14.1217 7.84285 16.1566 9.34315 17.6569C10.8434 19.1571 12.8783 20 15 20C17.1217 20 19.1566 19.1571 20.6569 17.6569C22.1571 16.1566 23 14.1217 23 12C23 6 18 2 18 2C18 5 16 7 16 10C16 7 12 5 12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.2"/>
-    <path d="M12 22C12 22 9 19 9 15C9 15 10 14 12 12C14 14 15 15 15 15C15 19 12 22 12 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 2C12 2 8 6 8 11C8 13.2091 9.79086 15 12 15C14.2091 15 16 13.2091 16 11C16 6 12 2 12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15"/>
+    <path d="M12 15C12 15 10 18 10 20C10 21.1046 10.8954 22 12 22C13.1046 22 14 21.1046 14 20C14 18 12 15 12 15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15"/>
+    <path d="M8 11C8 7 10 5 12 5C14 5 16 7 16 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6"/>
   </svg>
 );
 
