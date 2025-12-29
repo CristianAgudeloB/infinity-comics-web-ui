@@ -186,18 +186,19 @@ const renderPublisherGridSection = (publisher: string, publisherSeries: Series[]
         </Link>
       </div>
 
-      {/* Grid de series - 5 columnas, tamaño similar a los sliders */}
+      {/* Grid de series - 4 columnas en móvil, 5 en pantallas grandes */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
-        {limitedSeries.map((s) => (
-          <SeriesCard 
-            key={s._id} 
-            id={s._id} 
-            title={s.name} 
-            image={s.coverUrl} 
-            publisher={s.publisher} 
-            optimizeImage={true} 
-            hasOnlineRead={s.hasOnlineRead} 
-          />
+        {limitedSeries.map((s, index) => (
+          <div key={s._id} className={index === 4 ? "hidden lg:block" : ""}>
+            <SeriesCard 
+              id={s._id} 
+              title={s.name} 
+              image={s.coverUrl} 
+              publisher={s.publisher} 
+              optimizeImage={true} 
+              hasOnlineRead={s.hasOnlineRead} 
+            />
+          </div>
         ))}
       </div>
     </section>
@@ -330,7 +331,7 @@ const renderPublisherSection = (publisher: string, publisherSeries: Series[]) =>
                 <div className="p-2 bg-zinc-800/50 border border-zinc-700/50 rounded-lg">
                   <FireIcon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-bold text-zinc-100">Destacados</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-zinc-100">Populares</h3>
               </div>
 
               <div className="space-y-2 sm:space-y-3 flex-1">
