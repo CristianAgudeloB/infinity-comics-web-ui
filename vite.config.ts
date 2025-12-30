@@ -17,7 +17,8 @@ export default defineConfig({
     allowedHosts: [
       'infinity-comics.com',
       'www.infinity-comics.com',
-      'https://library-manager-rlq5.onrender.com/'
+      'https://library-manager-rlq5.onrender.com/',
+      'library-manager-rlq5.onrender.com'
     ]
   },
   
